@@ -5,31 +5,37 @@ import view.ViewScreen;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Random;
 
-public class Controller {
+public class Controller extends Thread {
     private ViewScreen viewScreen;
-    private Client client;
+    private ArrayList<Client>  clients = new ArrayList<>();
     private int numberOfClients;
     private int numberOfQueues;
     private int maximumSimulationTime;
     private int minimumArrivalTime;
     private int maximumArrivalTime;
-    private  int minimumServiceTime;
-    private  int maximumServiceTime;
+    private int minimumServiceTime;
+    private int maximumServiceTime;
 
-    public Controller(ViewScreen viewScreen, Client client) {
+    public Controller(ViewScreen viewScreen) {
         this.viewScreen = viewScreen;
-        this.client = client;
+
 
         this.viewScreen.submitListener(new SubmitListener());
     }
 
     class SubmitListener implements ActionListener
     {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             read();
+            randomClientGenerator();
+            for (Client client : clients)
+            {
+                System.out.println(client.getId() + " " + client.getTimeArrival() + " " + client.getTimeService());
+            }
         }
     }
 
@@ -43,6 +49,27 @@ public class Controller {
         minimumServiceTime = viewScreen.getMinServiceTimeTextField();
         maximumServiceTime = viewScreen.getMaxServiceTimeTextField();
         viewScreen.clear();
+    }
+
+    private void randomClientGenerator()
+    {
+
+        Random random = new Random();
+        for (int i=1;i<=numberOfClients;i++)
+        {
+            //genereate n random clients
+            if(maximumArrivalTime > minimumArrivalTime && maximumServiceTime > minimumServiceTime) {
+                int timeArrival = random.nextInt(maximumArrivalTime - minimumArrivalTime) + minimumArrivalTime;
+                int timeService = random.nextInt(maximumServiceTime - minimumServiceTime) + minimumServiceTime;
+                int id = i;
+                Client randomClient = new Client(i, timeArrival, timeService);
+                clients.add(randomClient);
+            }
+            else {
+                System.out.println("Error");
+            }
+
+        }
 
     }
 
@@ -54,12 +81,12 @@ public class Controller {
         this.viewScreen = viewScreen;
     }
 
-    public Client getClient() {
-        return client;
+    public ArrayList<Client> getClients() {
+        return clients;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setClients(ArrayList<Client> clients) {
+        this.clients = clients;
     }
 
     public int getNumberOfClients() {
