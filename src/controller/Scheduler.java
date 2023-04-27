@@ -45,7 +45,5 @@ public class Scheduler {
         return queues;
     }
 
-    public void setQueues(List<ClientQueue> queues) {
-        this.queues = queues;
-    }
+
 }

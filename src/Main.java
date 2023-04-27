@@ -3,6 +3,9 @@ import data.Client;
 import data.ClientQueue;
 import view.ViewScreen;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Main {
 
     public static void main(String[] args) throws InterruptedException {
@@ -18,6 +21,9 @@ public class Main {
         }
 
         controller.start();
+
+
+
 
 
       /*  System.out.println("sdsd");
