@@ -136,20 +136,20 @@ public class Controller extends Thread {
                 } else {
                     String string4 = "Queue " + queue.getQueueId() + ": ";
                     writeToFileText(string4);
+                    int index = 0;
                     for (Client client : queue.getClientQueue()) {
+
                         String string5 ="(" + client.getId() + ", " + client.getTimeArrival() + ", " + client.getTimeService() + "); ";
                         writeToFileText(string5);
+                        if(index == 10)
+                            writeToFileText("\n");
+                        index++;
                     }
                     writeToFileText("\n");
-
-
-
                 }
             }
 
-
             writeToFileText("\n");
-
 
             try {
                 sleep(1000);

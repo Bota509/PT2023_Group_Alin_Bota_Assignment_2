@@ -5,7 +5,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.lang.Thread.sleep;
+
 
 
 public class ClientQueue extends Thread{
@@ -31,26 +31,20 @@ public class ClientQueue extends Thread{
     }
     public void run()
     {
-
         while (currentThread().isAlive())
         {
             if(clientQueue.size() > 0)
             {
                 try {
                     Client currentClient = clientQueue.peek();
-                    this.sleep(1000 * currentClient.getTimeService());
-                    clientQueue.poll();
+                    sleep(1000 * currentClient.getTimeService());
                     timeService.getAndAdd(-currentClient.getTimeService());
-
+                    clientQueue.poll();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-
             }
-
         }
-
-
     }
 
     public BlockingQueue<Client> getClientQueue() {

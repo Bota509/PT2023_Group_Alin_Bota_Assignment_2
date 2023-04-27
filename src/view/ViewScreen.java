@@ -171,14 +171,6 @@ public  ViewScreen()
         this.maxServiceTimeTextField.setText(maxServiceTimeTextField);
     }
 
-    public JButton getStartSimulationButton() {
-        return startSimulationButton;
-    }
-
-    public void setStartSimulationButton(JButton startSimulationButton) {
-        this.startSimulationButton = startSimulationButton;
-    }
-
     public void submitListener (ActionListener actionListener)
     {
         this.startSimulationButton.addActionListener(actionListener);
