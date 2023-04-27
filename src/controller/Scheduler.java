@@ -8,9 +8,7 @@ import java.util.List;
 
 public class Scheduler {
 
-
    private List<ClientQueue> queues = new ArrayList<>();
-   private  Controller controller = new Controller();
 
 
    //create the same number of threads as number of queues where put

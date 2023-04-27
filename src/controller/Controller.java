@@ -23,7 +23,6 @@ public class Controller extends Thread {
     private AtomicInteger simulationTime;
     private boolean buttonPressed = false;
     private Scheduler scheduler;
-    private ClientQueue clientQueue;
 
 
     public Controller(ViewScreen viewScreen) {
@@ -68,7 +67,7 @@ public class Controller extends Thread {
         Random random = new Random();
         for (int i=1;i<=numberOfClients;i++)
         {
-            //genereate n random clients
+            //generate n random clients
             if(maximumArrivalTime > minimumArrivalTime && maximumServiceTime > minimumServiceTime) {
                 int timeArrival = random.nextInt(maximumArrivalTime - minimumArrivalTime) + minimumArrivalTime;
                 int timeService = random.nextInt(maximumServiceTime - minimumServiceTime) + minimumServiceTime;
@@ -127,7 +126,6 @@ public class Controller extends Thread {
                 }
             }
 
-
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
@@ -140,92 +138,9 @@ public class Controller extends Thread {
         System.out.println("SIMULATION FINISHED!");
 
     }
-
-    public ViewScreen getViewScreen() {
-        return viewScreen;
-    }
-
-    public void setViewScreen(ViewScreen viewScreen) {
-        this.viewScreen = viewScreen;
-    }
-
-    public ArrayList<Client> getWaitingClients() {
-        return waitingClients;
-    }
-
-    public void setWaitingClients(ArrayList<Client> waitingClients) {
-        this.waitingClients = waitingClients;
-    }
-
-    public int getNumberOfClients() {
-        return numberOfClients;
-    }
-
-    public void setNumberOfClients(int numberOfClients) {
-        this.numberOfClients = numberOfClients;
-    }
-
-    public int getNumberOfQueues() {
-        return numberOfQueues;
-    }
-
-    public void setNumberOfQueues(int numberOfQueues) {
-        this.numberOfQueues = numberOfQueues;
-    }
-
-    public int getMaximumSimulationTime() {
-        return maximumSimulationTime;
-    }
-
-    public void setMaximumSimulationTime(int maximumSimulationTime) {
-        this.maximumSimulationTime = maximumSimulationTime;
-    }
-
-    public int getMinimumArrivalTime() {
-        return minimumArrivalTime;
-    }
-
-    public void setMinimumArrivalTime(int minimumArrivalTime) {
-        this.minimumArrivalTime = minimumArrivalTime;
-    }
-
-    public int getMaximumArrivalTime() {
-        return maximumArrivalTime;
-    }
-
-    public void setMaximumArrivalTime(int maximumArrivalTime) {
-        this.maximumArrivalTime = maximumArrivalTime;
-    }
-
-    public int getMinimumServiceTime() {
-        return minimumServiceTime;
-    }
-
-    public void setMinimumServiceTime(int minimumServiceTime) {
-        this.minimumServiceTime = minimumServiceTime;
-    }
-
-    public int getMaximumServiceTime() {
-        return maximumServiceTime;
-    }
-
-    public void setMaximumServiceTime(int maximumServiceTime) {
-        this.maximumServiceTime = maximumServiceTime;
-    }
-
-    public AtomicInteger getSimulationTime() {
-        return simulationTime;
-    }
-
-    public void setSimulationTime(AtomicInteger simulationTime) {
-        this.simulationTime = simulationTime;
-    }
-
-    public boolean isButtonPressed() {
+    public boolean isButtonPressed()
+    {
         return buttonPressed;
     }
 
-    public void setButtonPressed(boolean buttonPressed) {
-        this.buttonPressed = buttonPressed;
-    }
 }
