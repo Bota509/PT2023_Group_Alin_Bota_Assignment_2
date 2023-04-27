@@ -16,23 +16,15 @@ public class Client {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getTimeArrival() {
         return timeArrival;
     }
 
-    public void setTimeArrival(int timeArrival) {
-        this.timeArrival = timeArrival;
-    }
 
     public int getTimeService() {
         return timeService;
     }
 
-    public void setTimeService(int timeService) {
-        this.timeService = timeService;
-    }
+
 }
