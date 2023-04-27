@@ -84,8 +84,8 @@ public class Controller extends Thread {
                 int timeService = random.nextInt(maximumServiceTime - minimumServiceTime) + minimumServiceTime;
                 Client randomClient = new Client(i, timeArrival, timeService);
                 waitingClients.add(randomClient);
-                if(maxim < timeArrival + timeService )
-                    maxim = timeArrival + timeService;
+                if(maxim < timeArrival + timeService+1 )
+                    maxim = timeArrival + timeService+1;
             }
             else {
                 System.out.println("Error");
@@ -108,26 +108,25 @@ public class Controller extends Thread {
 
             for (int i = 0; i < waitingClients.size(); i++) {
 
-                boolean waitingClientRemoved = false;
                 if (waitingClients.get(i).getTimeArrival() <= simulationTime.intValue()) {
                     scheduler.addInServiceQueue(waitingClients.get(i));
                     waitingClients.remove(waitingClients.get(i));
-                    waitingClientRemoved = true;
-                }
 
-                if (!waitingClientRemoved) {
-                    String string1 = "(" + waitingClients.get(i).getId() + ", " + waitingClients.get(i).getTimeArrival() + ", " + waitingClients.get(i).getTimeService() + ");";
-                    writeToFileText(string1);
-                    if(i % 10 == 0)    //o data la 10 clienti spatiu ca sa fie mai clar vizibil
-                        writeToFileText("\n");
                 }
 
             }
+            for (int i = 0; i < waitingClients.size(); i++) {
+
+                String string1 = "(" + waitingClients.get(i).getId() + ", " + waitingClients.get(i).getTimeArrival() + ", " + waitingClients.get(i).getTimeService() + ");";
+                writeToFileText(string1);
+                if (i % 10 == 0)    //o data la 10 clienti spatiu ca sa fie mai clar vizibil
+                    writeToFileText("\n");
+            }
+
+
             writeToFileText("\n");
 
             for (ClientQueue queue : scheduler.getQueues()) {
-
-
 
                 if (queue.getQueueLenght() == 0) {
                     String string3 = "Queue " + queue.getQueueId() + ": closed";
