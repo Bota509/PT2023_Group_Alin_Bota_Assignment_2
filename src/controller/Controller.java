@@ -40,12 +40,8 @@ public class Controller extends Thread {
             throw new RuntimeException(e);
         }
 
-
-
         this.viewScreen = viewScreen;
         this.simulationTime = new AtomicInteger(0);
-
-
         this.viewScreen.submitListener(new SubmitListener());
     }
 
@@ -57,7 +53,7 @@ public class Controller extends Thread {
             read();
             randomClientGenerator();
             buttonPressed = true;
-             scheduler = new Scheduler(numberOfQueues);
+            scheduler = new Scheduler(numberOfQueues);
 
         }
     }
@@ -76,8 +72,6 @@ public class Controller extends Thread {
 
     public void randomClientGenerator()
     {
-
-
         Random random = new Random();
         for (int i=1;i<=numberOfClients;i++)
         {
@@ -88,8 +82,6 @@ public class Controller extends Thread {
                 Client randomClient = new Client(i, timeArrival, timeService);
                 waitingClients.add(randomClient);
                 totalTimeService += timeService;
-                if(maxim < timeArrival + timeService+1 )
-                    maxim = timeArrival + timeService+1;
             }
             else {
                 System.out.println("Error");
@@ -109,15 +101,15 @@ public class Controller extends Thread {
     //THIS THREAD IS RESPONSIBLE FOR THE ENTIRE SIMULATION TIME
     @Override
     public void run() {
-
-
         int maximCurrentClients = -1;
         int peakHour = 0;
-        while (simulationTime.intValue() <= maximumSimulationTime && simulationTime.intValue() <= maxim) {
+        boolean remainingClients = false;
+        while (simulationTime.intValue() <= maximumSimulationTime && !remainingClients) {
 
             String string = "Time" + simulationTime.toString();
             writeToFileText(string + "\n");
             writeToFileText("Waiting Clients : ");
+
 
 
             for (int i = 0; i < waitingClients.size(); i++) {
@@ -125,16 +117,22 @@ public class Controller extends Thread {
                 if (waitingClients.get(i).getTimeArrival() <= simulationTime.intValue()) {
                     scheduler.addInServiceQueue(waitingClients.get(i));
                     waitingClients.remove(waitingClients.get(i));
-
                 }
 
             }
+
             for (int i = 0; i < waitingClients.size(); i++) {
 
                 String string1 = "(" + waitingClients.get(i).getId() + ", " + waitingClients.get(i).getTimeArrival() + ", " + waitingClients.get(i).getTimeService() + ");";
                 writeToFileText(string1);
                 if (i % 10 == 0)    //o data la 10 clienti spatiu ca sa fie mai clar vizibil
                     writeToFileText("\n");
+            }
+
+            boolean areWaitingClients = true;
+            if(waitingClients.size() == 0)
+            {
+                areWaitingClients = false;
             }
 
 
@@ -149,7 +147,10 @@ public class Controller extends Thread {
 
             writeToFileText("\n");
 
+            boolean noMoreClientsInQueues = true;
             for (ClientQueue queue : scheduler.getQueues()) {
+                if(!queue.getClientQueue().isEmpty())
+                    noMoreClientsInQueues = false;
 
                 if (queue.getQueueLenght() == 0) {
                     String string3 = "Queue " + queue.getQueueId() + ": closed";
@@ -170,6 +171,8 @@ public class Controller extends Thread {
                     writeToFileText("\n");
                 }
             }
+            if(noMoreClientsInQueues && !areWaitingClients)
+                remainingClients = true;
 
             writeToFileText("\n");
 
