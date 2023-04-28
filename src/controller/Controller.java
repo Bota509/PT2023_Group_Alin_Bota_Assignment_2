@@ -190,7 +190,7 @@ public class Controller extends Thread {
         System.out.println("SIMULATION FINISHED!");
 
         try {
-            writer.write("SIMULATION FINISHED");
+            writer.write("SIMULATION FIDNISHED");
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
