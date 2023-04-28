@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,6 +28,7 @@ public class Controller extends Thread {
     private Scheduler scheduler;
     private FileWriter writer;
     private int maxim = -1;
+    private int totalTimeService = 0;
 
 
     public Controller(ViewScreen viewScreen)  {
@@ -37,6 +39,7 @@ public class Controller extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
 
 
         this.viewScreen = viewScreen;
@@ -84,6 +87,7 @@ public class Controller extends Thread {
                 int timeService = random.nextInt(maximumServiceTime - minimumServiceTime) + minimumServiceTime;
                 Client randomClient = new Client(i, timeArrival, timeService);
                 waitingClients.add(randomClient);
+                totalTimeService += timeService;
                 if(maxim < timeArrival + timeService+1 )
                     maxim = timeArrival + timeService+1;
             }
@@ -93,12 +97,22 @@ public class Controller extends Thread {
         }
     }
 
+    public int calculateAverageWaiting(){                                   //gets the total waiting time from all the
+        int waitTime = 0;                                                    //queues, sums them up and divide it by
+        for(ClientQueue queue : scheduler.getQueues()){                        //the number of queues
+            waitTime += queue.getTotalTime().intValue();
+        }
+        return waitTime / numberOfQueues;
+    }
+
 
     //THIS THREAD IS RESPONSIBLE FOR THE ENTIRE SIMULATION TIME
     @Override
     public void run() {
 
 
+        int maximCurrentClients = -1;
+        int peakHour = 0;
         while (simulationTime.intValue() <= maximumSimulationTime && simulationTime.intValue() <= maxim) {
 
             String string = "Time" + simulationTime.toString();
@@ -123,6 +137,15 @@ public class Controller extends Thread {
                     writeToFileText("\n");
             }
 
+
+            int currentClients = 0;
+            for(ClientQueue queue : scheduler.getQueues()){
+                currentClients += queue.getQueueLenght();
+            }
+            if(currentClients > maximCurrentClients){
+                maximCurrentClients = currentClients;
+                peakHour = simulationTime.intValue();
+            }
 
             writeToFileText("\n");
 
@@ -157,6 +180,10 @@ public class Controller extends Thread {
             }
             simulationTime.getAndIncrement();
         }
+
+        writeToFileText("Average Waiting Time : " + calculateAverageWaiting() + "\n");
+        writeToFileText("Peak Hour : " + peakHour + "\n");
+        writeToFileText("Average Service Time : " + totalTimeService / numberOfClients + "\n");
         System.out.println("SIMULATION FINISHED!");
 
         try {

@@ -5,6 +5,7 @@ import view.ViewScreen;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Main {
 
@@ -12,6 +13,7 @@ public class Main {
 
         ViewScreen viewScreen = new ViewScreen();
 
+        Object lock = new Object();
         Controller controller = new Controller(viewScreen);
         while (!controller.isButtonPressed())
         {
