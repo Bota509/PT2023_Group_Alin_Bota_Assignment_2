@@ -156,11 +156,11 @@ public  ViewScreen()
     }
 
     public int getMinServiceTimeTextField() {
-        return Integer.parseInt(minArrivalTimeTextField.getText());
+        return Integer.parseInt(minServiceTimeTextField.getText());
     }
 
-    public void setMinServiceTimeTextField(String minArrivalTimeTextField) {
-        this.minServiceTimeTextField.setText(minArrivalTimeTextField);
+    public void setMinServiceTimeTextField(String minServiceTimeTextField) {
+        this.minServiceTimeTextField.setText(minServiceTimeTextField);
     }
 
     public int getMaxServiceTimeTextField() {

@@ -35,7 +35,7 @@ public class Controller extends Thread {
 
 
         try {
-            writer = new FileWriter("Text1.txt");
+            writer = new FileWriter("Test3.txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -77,14 +77,14 @@ public class Controller extends Thread {
         {
             //generate n random clients
             if(maximumArrivalTime > minimumArrivalTime && maximumServiceTime > minimumServiceTime) {
-                int timeArrival = random.nextInt(maximumArrivalTime - minimumArrivalTime) + minimumArrivalTime;
-                int timeService = random.nextInt(maximumServiceTime - minimumServiceTime) + minimumServiceTime;
+                int timeArrival = random.nextInt(maximumArrivalTime - minimumArrivalTime + 1) + minimumArrivalTime;
+                int timeService = random.nextInt(maximumServiceTime - minimumServiceTime + 1) + minimumServiceTime;
                 Client randomClient = new Client(i, timeArrival, timeService);
                 waitingClients.add(randomClient);
                 totalTimeService += timeService;
-            }
+           }
             else {
-                System.out.println("Error");
+                System.out.println("Error from client generator");
             }
         }
     }

@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ClientQueue extends Thread{
 
 
-    BlockingQueue<Client> clientQueue = new ArrayBlockingQueue<>(99999);
+    BlockingQueue<Client> clientQueue;
     //Controller controller = new Controller();
     private AtomicInteger timeArrival; //use Atomic Integer for using multiple threads
     private  AtomicInteger timeService;
@@ -23,6 +23,7 @@ public class ClientQueue extends Thread{
         this.timeService = new AtomicInteger(0);
         this.timeArrival = new AtomicInteger(0);
         this. totalTime = new AtomicInteger(0);
+        clientQueue = new ArrayBlockingQueue<>(99999);
         this.id = id;
     }
 
