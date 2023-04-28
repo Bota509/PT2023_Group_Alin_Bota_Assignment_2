@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,36 +29,29 @@ public class Controller extends Thread {
     private int maxim = -1;
     private int totalTimeService = 0;
 
-
-    public Controller(ViewScreen viewScreen)  {
-
-
+    public Controller(ViewScreen viewScreen) {
         try {
             writer = new FileWriter("Test3.txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         this.viewScreen = viewScreen;
         this.simulationTime = new AtomicInteger(0);
         this.viewScreen.submitListener(new SubmitListener());
     }
 
 
-    class SubmitListener implements ActionListener
-    {
+    class SubmitListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             read();
             randomClientGenerator();
             buttonPressed = true;
             scheduler = new Scheduler(numberOfQueues);
-
         }
     }
 
-    public   void read()
-    {
+    public void read() {
         numberOfClients = viewScreen.getNrOfClientsTextField();
         numberOfQueues = viewScreen.getNrOfLabelsTextField();
         maximumSimulationTime = viewScreen.getMaxSimulationTimeTextField();
@@ -70,28 +62,25 @@ public class Controller extends Thread {
         viewScreen.clear();
     }
 
-    public void randomClientGenerator()
-    {
+    public void randomClientGenerator() {
         Random random = new Random();
-        for (int i=1;i<=numberOfClients;i++)
-        {
+        for (int i = 1; i <= numberOfClients; i++) {
             //generate n random clients
-            if(maximumArrivalTime > minimumArrivalTime && maximumServiceTime > minimumServiceTime) {
+            if (maximumArrivalTime > minimumArrivalTime && maximumServiceTime > minimumServiceTime) {
                 int timeArrival = random.nextInt(maximumArrivalTime - minimumArrivalTime + 1) + minimumArrivalTime;
                 int timeService = random.nextInt(maximumServiceTime - minimumServiceTime + 1) + minimumServiceTime;
                 Client randomClient = new Client(i, timeArrival, timeService);
                 waitingClients.add(randomClient);
                 totalTimeService += timeService;
-           }
-            else {
+            } else {
                 System.out.println("Error from client generator");
             }
         }
     }
 
-    public int calculateAverageWaiting(){                                   //gets the total waiting time from all the
+    public int calculateAverageWaiting() {                                   //gets the total waiting time from all the
         int waitTime = 0;                                                    //queues, sums them up and divide it by
-        for(ClientQueue queue : scheduler.getQueues()){                        //the number of queues
+        for (ClientQueue queue : scheduler.getQueues()) {                        //the number of queues
             waitTime += queue.getTotalTime().intValue();
         }
         return waitTime / numberOfQueues;
@@ -105,22 +94,16 @@ public class Controller extends Thread {
         int peakHour = 0;
         boolean remainingClients = false;
         while (simulationTime.intValue() <= maximumSimulationTime && !remainingClients) {
-
             String string = "Time" + simulationTime.toString();
             writeToFileText(string + "\n");
             writeToFileText("Waiting Clients : ");
-
-
-
             for (int i = 0; i < waitingClients.size(); i++) {
 
                 if (waitingClients.get(i).getTimeArrival() <= simulationTime.intValue()) {
                     scheduler.addInServiceQueue(waitingClients.get(i));
                     waitingClients.remove(waitingClients.get(i));
                 }
-
             }
-
             for (int i = 0; i < waitingClients.size(); i++) {
 
                 String string1 = "(" + waitingClients.get(i).getId() + ", " + waitingClients.get(i).getTimeArrival() + ", " + waitingClients.get(i).getTimeService() + ");";
@@ -130,48 +113,41 @@ public class Controller extends Thread {
             }
 
             boolean areWaitingClients = true;
-            if(waitingClients.size() == 0)
-            {
+            if (waitingClients.size() == 0) {
                 areWaitingClients = false;
             }
-
-
             int currentClients = 0;
-            for(ClientQueue queue : scheduler.getQueues()){
+            for (ClientQueue queue : scheduler.getQueues()) {
                 currentClients += queue.getQueueLenght();
             }
-            if(currentClients > maximCurrentClients){
+            if (currentClients > maximCurrentClients) {
                 maximCurrentClients = currentClients;
                 peakHour = simulationTime.intValue();
             }
-
             writeToFileText("\n");
-
             boolean noMoreClientsInQueues = true;
             for (ClientQueue queue : scheduler.getQueues()) {
-                if(!queue.getClientQueue().isEmpty())
+                if (!queue.getClientQueue().isEmpty())
                     noMoreClientsInQueues = false;
-
                 if (queue.getQueueLenght() == 0) {
                     String string3 = "Queue " + queue.getQueueId() + ": closed";
                     writeToFileText(string3 + "\n");
-
                 } else {
                     String string4 = "Queue " + queue.getQueueId() + ": ";
                     writeToFileText(string4);
                     int index = 0;
                     for (Client client : queue.getClientQueue()) {
 
-                        String string5 ="(" + client.getId() + ", " + client.getTimeArrival() + ", " + client.getTimeService() + "); ";
+                        String string5 = "(" + client.getId() + ", " + client.getTimeArrival() + ", " + client.getTimeService() + "); ";
                         writeToFileText(string5);
-                        if(index == 10)
+                        if (index == 10)
                             writeToFileText("\n");
                         index++;
                     }
                     writeToFileText("\n");
                 }
             }
-            if(noMoreClientsInQueues && !areWaitingClients)
+            if (noMoreClientsInQueues && !areWaitingClients)
                 remainingClients = true;
 
             writeToFileText("\n");
@@ -207,8 +183,7 @@ public class Controller extends Thread {
         System.out.print(string);
     }
 
-    public boolean isButtonPressed()
-    {
+    public boolean isButtonPressed() {
         return buttonPressed;
     }
 
