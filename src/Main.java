@@ -10,7 +10,6 @@ public class Main {
 
         ViewScreen viewScreen = new ViewScreen();
 
-        Object lock = new Object();
         Controller controller = new Controller(viewScreen);
         while (!controller.isButtonPressed())
         {
